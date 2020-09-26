@@ -23,9 +23,25 @@ declare(strict_types=1);
 
 namespace pjz9n\alwaysitemframedrop;
 
+use pocketmine\block\ItemFrame;
+use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\plugin\PluginBase;
 
-class Main extends PluginBase
+class Main extends PluginBase implements Listener
 {
-    //
+    public function onEnable(): void
+    {
+        $this->getServer()->getPluginManager()->registerEvents($this, $this);
+    }
+
+    /**
+     * @priority HIGHEST
+     */
+    public function onItemFrameDrop(PlayerInteractEvent $event): void
+    {
+        if ($event->getAction() !== PlayerInteractEvent::LEFT_CLICK_BLOCK
+            || !($event->getBlock() instanceof ItemFrame)) return;
+        $event->setCancelled(false);
+    }
 }
